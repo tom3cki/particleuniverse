@@ -22,10 +22,30 @@ link_directories(${OGRE_LIBRARY_DIRS})
 include_directories(${OGRE_INCLUDE_DIRS})
 list(APPEND LIBS ${OGRE_LIBRARIES})
 
+# add wx Widgets for editor
+find_package(wxWidgets REQUIRED core base gl)
+if(wxWidgets_FOUND)
+      message("Found wxWidgets: ${wxWidgets_DEFINITIONS}")
+      include(${wxWidgets_USE_FILE})
+else()
+      message("wxWidgets not found! Editor WILL NOT be built")
+endif()
+
+find_package(GTK2 REQUIRED)
+if(GTK2_FOUND)
+      message("Found GTK2: ${GTK2_VERSION}")
+else()
+      message("GTK2 not found! Editor WILL NOT be built")
+endif()
+
 add_definitions(-DOGRE_PLUGIN_DIR_REL="${OGRE_PLUGIN_DIR_REL}")
 add_definitions(-DOGRE_PLUGIN_DIR_DBG="${OGRE_PLUGIN_DIR_DBG}")
 
 add_subdirectory(Plugins/ParticleUniverse)
 add_subdirectory(Samples/ParticleUniverseDemo)
 add_subdirectory(Tools/AtlasImageTool)
+
+if (wxWidgets_FOUND AND GTK2_FOUND)
+   add_subdirectory(Editor)
+endif()
 
