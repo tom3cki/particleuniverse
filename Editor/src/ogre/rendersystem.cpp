@@ -24,7 +24,9 @@
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
  #ifndef OGRE_PLUGINDIR
- #define OGRE_PLUGINDIR "/usr/local/lib/OGRE"
+ // TODO TMCKI this should be related to architecture and/or type of OGRE installation (RPM/or manual from sources)
+ #define OGRE_PLUGINDIR "./" 
+//  #define OGRE_PLUGINDIR "/usr/local/lib/OGRE"
  #endif
 #else 
  #define OGRE_PLUGINDIR ""

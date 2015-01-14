@@ -327,30 +327,7 @@ class ParticleUniverseEditorApp : public wxOgreApp
 {
 public:
 
-    bool OnInit()
-    {
-        // Initialize Ogre render system
-        m_rsys->LoadPlugin("RenderSystem_Direct3D9");
-        m_rsys->SelectOgreRenderSystem("Direct3D9 Rendering Subsystem");
-		m_rsys->LoadPlugin("ParticleUniverse");
-        m_rsys->Initialise();
-
-		m_frame = new ParticleUniverseEditorFrame(0, ID_EDITOR_WINDOW);
-		m_frame->CreateToolbar();
-		m_frame->CreateListOfTemplates();
-        m_frame->CreateTabs();
-
-		m_res->LoadResourceFile("resources.cfg");
-		m_res->InitialiseAllResources();
-
-		m_frame->Show();
-        m_frame->CreateScene();
-
-		// The SceneManager has been created, so start filling the list of templates
-		m_frame->LoadListOfTemplates();
-
-        return true;
-    }
+    bool OnInit();
 
 private:
 

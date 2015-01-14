@@ -23,6 +23,8 @@
 #include "wx/ogre/control.h"
 #include "wx/ogre/utils.h"
 
+#include <Overlay/OgreOverlaySystem.h>
+
 #ifdef __WXGTK20__
 extern "C" {
 #include <gdk/gdkx.h>
@@ -32,6 +34,9 @@ extern "C" {
 #endif
 
 unsigned int wxOgreControl::m_instances = 0;
+
+Ogre::OverlaySystem* ptrOvSys = 0;
+
 
 BEGIN_EVENT_TABLE(wxOgreControl, wxControl)
     EVT_MOUSE_EVENTS    (wxOgreControl::OnMouseMove)
@@ -287,7 +292,13 @@ void wxOgreControl::GetParentWindowHandle(Ogre::NameValuePairList& pl)
 Ogre::SceneManager* wxOgreControl::CreateSceneManager(const Ogre::String& tn,
                                                     const Ogre::String& name)
 {
-    SetSceneManager(Ogre::Root::getSingleton().createSceneManager(tn, name));
+   SetSceneManager(Ogre::Root::getSingleton().createSceneManager(tn, name));
+    
+   if (!ptrOvSys)
+   {
+      ptrOvSys = new Ogre::OverlaySystem;
+   }
+    
     return m_sm;
 }
 //------------------------------------------------------------------------------
@@ -295,6 +306,11 @@ Ogre::SceneManager* wxOgreControl::CreateSceneManager(Ogre::SceneTypeMask tm,
                                                     const Ogre::String& name)
 {
 	SetSceneManager(Ogre::Root::getSingleton().createSceneManager(tm, name));
+
+   if (!ptrOvSys)
+   {
+      ptrOvSys = new Ogre::OverlaySystem;
+   }
     return m_sm;
 }
 //------------------------------------------------------------------------------

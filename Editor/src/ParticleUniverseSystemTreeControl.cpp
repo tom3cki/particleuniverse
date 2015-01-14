@@ -37,11 +37,6 @@ SystemTreeControl::SystemTreeControl(ParticleUniverseEditorFrame* parentFrame,
 	mParentFrame(parentFrame),
 	mContextMenu(0)
 {
-// To set the explorer look. See also http://weseetips.com/tag/setwindowtheme/
-//#ifdef __WXMSW__ 
-        //SetWindowTheme((HWND)GetHWND(), L"Explorer", NULL); 
-//#endif 
-
 	// Internationalize
 	ROOT_NODE_NAME = _("Particle Systems");
 	DEFAULT_CATEGORY_NAME = _("General");

@@ -23,7 +23,7 @@ include_directories(${OGRE_INCLUDE_DIRS})
 list(APPEND LIBS ${OGRE_LIBRARIES})
 
 # add wx Widgets for editor
-find_package(wxWidgets REQUIRED core base gl)
+find_package(wxWidgets REQUIRED core base gl adv)
 if(wxWidgets_FOUND)
       message("Found wxWidgets: ${wxWidgets_DEFINITIONS}")
       include(${wxWidgets_USE_FILE})

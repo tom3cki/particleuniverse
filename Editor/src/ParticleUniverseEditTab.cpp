@@ -1303,32 +1303,43 @@ void EditTab::removePropertyWindow(wxPropertyGrid* propertyWindow)
 //-----------------------------------------------------------------------
 void EditTab::deleteParticleSystemComponents(void)
 {
+   std::cout<<" -------------------- deleteParticleSystemComponents 1 "<<std::endl;
 	/** (1) Set all references to the particle system in the small render window to 0, because the particle system is not deleted through the 
 		individual Edit Components.
 	*/
 	std::vector<EditComponent*>::iterator it;
+   std::cout<<" -------------------- deleteParticleSystemComponents 2 "<<std::endl;
 	std::vector<EditComponent*> newList = mComponents;
+   std::cout<<" -------------------- deleteParticleSystemComponents 3 "<<std::endl;
 	for (it = newList.begin(); it != newList.end(); ++it)
 	{
+   std::cout<<" -------------------- deleteParticleSystemComponents 4 (*it) = "<<(*it)<<std::endl;
 		(*it)->setPUElement(0);
+   std::cout<<" -------------------- deleteParticleSystemComponents 5 "<<std::endl;
 	}
 
 	/** (2) Delete all Edit Components, except the particle system edit component.
 	*/
 	it;
 	newList = mComponents;
+   std::cout<<" -------------------- deleteParticleSystemComponents 6 "<<std::endl;
 	for (it = newList.begin(); it != newList.end(); ++it)
 	{
+   std::cout<<" -------------------- deleteParticleSystemComponents 7 "<<std::endl;
 		if ((*it)->getComponentType() != CT_SYSTEM)
 		{
+   std::cout<<" -------------------- deleteParticleSystemComponents 8 (*it) = "<<(*it)<<std::endl;
 			// Destroy edit components (affectors, emitters, ...)
 			(*it)->Close(true);
+   std::cout<<" -------------------- deleteParticleSystemComponents 9 "<<std::endl;
 		}
 	}
+   std::cout<<" -------------------- deleteParticleSystemComponents 99 "<<std::endl;
 }
 //-----------------------------------------------------------------------
 EditComponent* EditTab::forceCreateParticleSystemEditComponent(void)
 {
+   std::cout<<" -------------------- forceCreateParticleSystemEditComponent 1"<<std::endl;
 	std::vector<EditComponent*>::iterator it;
 	std::vector<EditComponent*> newList = mComponents;
 	EditComponent* particleSystemEditComponent = 0;
@@ -1342,11 +1353,15 @@ EditComponent* EditTab::forceCreateParticleSystemEditComponent(void)
 		}
 	}
 
+   std::cout<<" -------------------- forceCreateParticleSystemEditComponent 10  particleSystemEditComponent = "<<particleSystemEditComponent<<std::endl;
 	if (!particleSystemEditComponent)
 	{
+      std::cout<<" -------------------- forceCreateParticleSystemEditComponent 11"<<std::endl;
 		// Create a particle system and particle system edit component
 		particleSystemEditComponent = createParticleSystemEditComponent();
+      std::cout<<" -------------------- forceCreateParticleSystemEditComponent 12"<<std::endl;
 	}
+   std::cout<<" -------------------- forceCreateParticleSystemEditComponent 20"<<std::endl;
 
 	// Return the SYSTEM EditComponent
 	return particleSystemEditComponent;
@@ -1415,24 +1430,36 @@ void EditTab::destroyDanglingPUComponents(void)
 	std::vector<EditComponent*>::iterator itSub;
 	std::vector<EditComponent*> newList = mComponents;
 	EditComponent* particleSystemEditComponent = 0;
+   std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 1"<<std::endl;
 	ParticleUniverse::ParticleSystemManager* particleSystemManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr();
+   std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 2"<<std::endl;
 	for (it = newList.begin(); it != newList.end(); ++it)
 	{
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3 iter ptr = "<<(*it)<<std::endl;
 		EditComponent* component = *it;
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3  component = "<<component<<std::endl;
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3  component isConnectionPossible? = "<<component->isConnectionPossible()<<std::endl;
 
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3 type = "<<component->getComponentType().ToAscii()<<std::endl;
 		//---------------------------------------- TECHNIQUE ----------------------------------------
 		if (component->getComponentType() == CT_TECHNIQUE)
 		{
+         std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 4"<<std::endl;
 			ParticleUniverse::ParticleTechnique* technique = static_cast<ParticleUniverse::ParticleTechnique*>(component->getPUElement());
+         std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 4"<<std::endl;
 			if (technique && !technique->getParentSystem())
 			{
+            std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 5"<<std::endl;
 				// This is a dangling technique; it may have subcomponents
 				for (itSub = newList.begin(); itSub != newList.end(); ++itSub)
 				{
+               std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 6"<<std::endl;
 					EditComponent* componentSub = *itSub;
 					if (componentSub->getComponentType() == CT_RENDERER)
 					{
+                  std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 7"<<std::endl;
 						ParticleUniverse::ParticleRenderer* renderer = static_cast<ParticleUniverse::ParticleRenderer*>(componentSub->getPUElement());
+                  std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 8"<<std::endl;
 						if (renderer && renderer->getParentTechnique() == technique)
 						{
 							componentSub->setPUElement(0);
@@ -1566,7 +1593,13 @@ void EditTab::destroyDanglingPUComponents(void)
 				component->setPUElement(0);
 			}
 		}
+		else
+      {
+         std::cout<<" -------------------- EditTab::destroyDanglingPUComponents else...."<<std::endl;
+      }
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 98"<<std::endl;
 	}
+   std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 99"<<std::endl;
 }
 //-----------------------------------------------------------------------
 wxPoint EditTab::createComponentsFromTechnique(EditComponent* systemEditComponent, 
@@ -2324,12 +2357,15 @@ void EditTab::destroyExternFromComponent(EditComponent* component)
 //-----------------------------------------------------------------------
 EditComponent* EditTab::createParticleSystemEditComponent(void)
 {
+   std::cout<<" -------------------- createParticleSystemEditComponent 1 mSystemCounter = "<<mSystemCounter<<std::endl;
 	if (mSystemCounter > 0)
 		return 0;
 
 	wxColour col;
 	col.Set(wxT("#000000"));
+   std::cout<<" -------------------- createParticleSystemEditComponent 2"<<std::endl;
 	EditComponent* systemComponent = new EditComponent(this, "mySystem", CT_SYSTEM, CST_UNDEFINED, col, wxSize(200, 80), wxBORDER_RAISED | wxCAPTION);
+   std::cout<<" -------------------- createParticleSystemEditComponent 3"<<std::endl;
 	systemComponent->setRootFrame(static_cast<ParticleUniverseEditorFrame*>(mRootParent));
 	//systemComponent->createPropertyWindow(CT_SYSTEM); // Recreate it, so it contains the root frame TESTTESTTESTTESTTESTTEST
 	systemComponent->createPropertyWindow(CST_UNDEFINED); // Recreate it, so it contains the root frame

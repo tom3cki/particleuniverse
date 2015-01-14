@@ -75,12 +75,12 @@ void ConfigDialog::initWindow(void)
 	wxPanel* generalPanel = createGeneralPanel(notebook);
 	wxPanel* directoriesPanel = createDirectoriesPanel(notebook);
 	wxPanel* recordPanel = createRecordPanel(notebook);
-	notebook->AddPage(generalPanel, _("General"), true, 0);
-	notebook->AddPage(directoriesPanel, _("Directories"), false, 1);
-	notebook->AddPage(recordPanel, _("Record"), false, 2);
+   notebook->AddPage(generalPanel, _("General"), true); // TODO TMCKI tutaj powinno być ID ikony=0, ale powoduje to SIGSEGVA
+   notebook->AddPage(directoriesPanel, _("Directories"), false); // TODO TMCKI tutaj powinno być ID ikony=1, ale powoduje to SIGSEGVA
+   notebook->AddPage(recordPanel, _("Record"), false); // TODO TMCKI tutaj powinno być ID ikony=2, ale powoduje to SIGSEGVA
 #ifdef PU_PHYSICS_PHYSX
-	wxPanel* physXPanel = createPhysXPanel(notebook);
-	notebook->AddPage(physXPanel, _("PhysX"), false, 3);
+   wxPanel* physXPanel = createPhysXPanel(notebook);
+   notebook->AddPage(physXPanel, _("PhysX"), false); // TODO TMCKI tutaj powinno być ID ikony=3, ale powoduje to SIGSEGVA
 #endif //PU_PHYSICS_PHYSX
 	LayoutDialog();
 	SetSize(size);

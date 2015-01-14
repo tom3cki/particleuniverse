@@ -71,6 +71,39 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(ParticleUniverseEditorFrame, wxFrame)
 
+
+//-----------------------------------------------------------------------
+bool ParticleUniverseEditorApp::OnInit()
+{
+   // Initialize Ogre render system
+#if WXOGRE_DEBUG and OGRE_PLATFORM == OGRE_PLATFORM_WINDOWS
+   m_rsys->LoadPlugin("RenderSystem_Direct3D9");
+   m_rsys->SelectOgreRenderSystem("Direct3D9 Rendering Subsystem");
+#else
+   m_rsys->LoadPlugin("RenderSystem_GL");
+   m_rsys->SelectOgreRenderSystem("OpenGL Rendering Subsystem");
+#endif
+   m_rsys->LoadPlugin("Plugin_ParticleUniverse");
+   m_rsys->Initialise();
+
+   m_frame = new ParticleUniverseEditorFrame(0, ID_EDITOR_WINDOW);
+   m_frame->CreateToolbar();
+   m_frame->CreateListOfTemplates();
+   m_frame->CreateTabs();
+
+   m_res->LoadResourceFile("resources.cfg");
+   m_res->InitialiseAllResources();
+
+   m_frame->Show();
+   m_frame->CreateScene();
+
+   // The SceneManager has been created, so start filling the list of templates
+   m_frame->LoadListOfTemplates();
+
+   return true;
+}
+
+
 bool ParticleUniverseEditorFrame::mUsePhysX = false;
 //-----------------------------------------------------------------------
 // Use MAX_WIDTH to make it extremely wide. The width is corrected later, but it sizes the toolbar correctly.
@@ -938,13 +971,17 @@ void ParticleUniverseEditorFrame::selectMaterialForAddedMesh(void)
 //-----------------------------------------------------------------------
 void ParticleUniverseEditorFrame::setPropertyWindow(PropertyWindow* propertyWindow)
 {
-	if (!propertyWindow)
+   if (!propertyWindow)
 		return;
 
-	if (IsBeingDeleted())
+   std::cout<<" -------------------- setPropertyWindow 2  "<<propertyWindow<<std::endl;
+   std::cout<<" -------------------- setPropertyWindow 3  "<<propertyWindow<<std::endl;
+   if (IsBeingDeleted())
 	{
+   std::cout<<" -------------------- setPropertyWindow 4  "<<propertyWindow<<std::endl;
 		return;
 	}
+   std::cout<<" -------------------- setPropertyWindow 5  "<<propertyWindow<<std::endl;
 
 	// Hide it by default
 	propertyWindow->Hide();
@@ -1103,6 +1140,7 @@ void ParticleUniverseEditorFrame::LoadListOfTemplates()
 	DEFAULT_CATEGORY_NAME = _("General");
 	wxTreeItemId rootNode = mListOfTemplates->AddRoot(ROOT_NODE_NAME, 0);
 	wxTreeItemId generalCategoryNode = mListOfTemplates->AppendItem(rootNode, DEFAULT_CATEGORY_NAME, 1); // Add the general node by default
+   std::cout<<" -------------------- LoadListOfTemplates 10"<<std::endl;
 	for (it = names.begin(); it != itEnd; ++it)
 	{
 		bool append = true;
@@ -1127,7 +1165,7 @@ void ParticleUniverseEditorFrame::LoadListOfTemplates()
 			mListOfTemplates->addItem(categoryName, particleSystemName, false);
 		}
 	}
-	
+   	
 	mListOfTemplates->sortAll();
 	mUIMainToolbar->getFileIcons()->reset(mListOfTemplates->GetCount());
 	mUIMainToolbar->getCompileIcons()->disableAll();
@@ -1149,6 +1187,7 @@ void ParticleUniverseEditorFrame::LoadListOfTemplates()
 	applyTextConfigOptions();
 	mListOfTemplates->Thaw();
 }
+
 //-----------------------------------------------------------------------
 void ParticleUniverseEditorFrame::CreateTabs()
 {
@@ -2365,18 +2404,26 @@ void ParticleUniverseEditorFrame::OnTemplatesClick(wxCommandEvent& event)
 			}
 #endif // PU_FULL_VERSION
 
+         std::cout<<" -------------------- OnTemplatesClick 30  "<<selection.ToAscii()<<std::endl;
+         // TODO TMCKI tutaj nie działa!!!! 
+         #warning tutaj jest babol
 			createNewSystem(wx2ogre(selection));
+         // TODO TMCKI tutaj nie działa!!!! 
+         std::cout<<" -------------------- OnTemplatesClick 31"<<std::endl;
 		}
 		mSavedFile = WX_STRING_BLANK;
 		resetPlayIcons();
 		mTemplateSelected = false;
+      std::cout<<" -------------------- OnTemplatesClick 35"<<std::endl;
 		mLatestSelection = sel;
 	}
 
+   std::cout<<" -------------------- OnTemplatesClick 50"<<std::endl;
 	mListOfTemplates->Thaw();
 	mTextCtrl->Thaw();
 	mEditNotebookPage->Thaw();
 	mControl->Thaw();
+   std::cout<<" -------------------- OnTemplatesClick 99"<<std::endl;
 }
 //-----------------------------------------------------------------------
 void ParticleUniverseEditorFrame::notifyScriptChanged(void)
@@ -2445,7 +2492,7 @@ void ParticleUniverseEditorFrame::_generateVideoIfNeeded(bool recording)
 	}
 	
 #else // TODO TMCKI
-# warning to dopisać do linuxa
+# warning Missing linux code. TODO
 #endif
 	// 2. Delete the generated image files
 	ParticleUniverse::String delFrames = "del " + wx2ogre(mConfigDialog->getVideoPath()) + "\\Frame*.*";
@@ -2697,15 +2744,20 @@ bool ParticleUniverseEditorFrame::createNewSystem(const ParticleUniverse::String
 			}
 			if (!forcedByEditTab && mEditNotebookPage)
 			{
+         std::cout<<" -------------------- createNewSystem 6.6  "<<templateName<<std::endl;
 				// 5. Also create a copy for the edit page (including all components)
 				createParticleSystemCopyForEditPage(templateName);
+         std::cout<<" -------------------- createNewSystem 6.7"<<std::endl;
 			}
 #ifdef PU_FULL_VERSION
 			if (script != mCurrentParticleScript)
 			{
+         std::cout<<" -------------------- createNewSystem 6.8"<<std::endl;
 				// 6. Load the script in the script tab
 				mCurrentParticleScript = script;
+         std::cout<<" -------------------- createNewSystem 6.8"<<std::endl;
 				LoadTextControl(ogre2wx(mCurrentParticleScript));
+         std::cout<<" -------------------- createNewSystem 6.10"<<std::endl;
 			}
 #endif // PU_FULL_VERSION
 
@@ -2713,8 +2765,11 @@ bool ParticleUniverseEditorFrame::createNewSystem(const ParticleUniverse::String
 			// 7. If the particle systen was detached from the entity, it must be reattached in case particleSystemWasAttachedToEntity is true
 			if (mAnimationWindow && particleSystemWasAttachedToEntity)
 			{
+         std::cout<<" -------------------- createNewSystem 6.11"<<std::endl;
 				mAnimationWindow->attachParticleSystemToEntity(boneName, mAddEntity);
+         std::cout<<" -------------------- createNewSystem 6.12"<<std::endl;
 			}
+         std::cout<<" -------------------- createNewSystem 6.99"<<std::endl;
 
 			return true;
 		}
@@ -2731,25 +2786,35 @@ bool ParticleUniverseEditorFrame::createNewSystem(const ParticleUniverse::String
 			mCurrentParticleSystemForRenderer = 0;
 		}
 	}
+   std::cout<<" -------------------- createNewSystem 8"<<std::endl;
 
 	return false;
 }
 //-----------------------------------------------------------------------
 void ParticleUniverseEditorFrame::createParticleSystemCopyForEditPage(const ParticleUniverse::String& templateName)
 {
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 1 mEditNotebookPage = "<<mEditNotebookPage<<std::endl;
 	mEditNotebookPage->Freeze();
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 2 mEditNotebookPage = "<<mEditNotebookPage<<std::endl;
 	mEditNotebookPage->destroyDanglingPUComponents();
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 3 mEditNotebookPage = "<<mEditNotebookPage<<std::endl;
 	mEditNotebookPage->deleteParticleSystemComponents();
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 5"<<std::endl;
 	if (mOgreControlSmall)
 	{
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 6"<<std::endl;
 		ParticleUniverse::ParticleSystem* particleSystem = mOgreControlSmall->notifyCreateNewSystem(templateName);
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 7"<<std::endl;
 		EditComponent* particleSystemEditComponent = mEditNotebookPage->forceCreateParticleSystemEditComponent(); // 'Guarantees' a valid particleSystemEditComponent
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 8"<<std::endl;
 		if (mEditNotebookPage->copyParticleSystemPropertiesToPropertyWindow(particleSystemEditComponent, particleSystem))
 		{
 			mEditNotebookPage->createParticleSystemComponents(particleSystemEditComponent, particleSystem);
 		}
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 10"<<std::endl;
 	}
 	mEditNotebookPage->Thaw();
+   std::cout<<" -------------------- createParticleSystemCopyForEditPage 11"<<std::endl;
 }
 //-----------------------------------------------------------------------
 int ParticleUniverseEditorFrame::showMessage(const wxString& message, long style)
@@ -2816,7 +2881,7 @@ bool ParticleUniverseEditorFrame::isPhysXInstalled(void)
 		return false;
 	}
 #else // TODO TMCKI
-# warning to dopisać do linuxa
+# warning Missing linux code. TODO
    return false;
 #endif
 }

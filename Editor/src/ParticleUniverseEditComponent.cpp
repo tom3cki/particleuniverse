@@ -48,6 +48,7 @@ EditComponent::EditComponent(
 	mPUElement(0),
 	mRootFrame(0)
 {
+   std::cout<<" -------------------- EditComponent 1 "<<std::endl;
 	// Internationize the strings
 	CT_SYSTEM = _("System");
 	CT_TECHNIQUE = _("Technique");
@@ -66,9 +67,12 @@ EditComponent::EditComponent(
 //	wxFont font(10, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_NORMAL, true);
 //	wxStaticText* text = new wxStaticText(this, wxID_ANY, "\n" + ogre2wx(name), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
 //	text->SetFont(font);
+   std::cout<<" -------------------- EditComponent 10 "<<std::endl;
 
 	mPropertyWindow = 0,
+   std::cout<<" -------------------- EditComponent 11 "<<std::endl;
 	mPropertyWindow = createPropertyWindow(mSubType);
+   std::cout<<" -------------------- EditComponent 12 "<<std::endl;
 	mOriginalSize = GetSize();
 
 	// Add connections if the component is double clicked, closed, moved, ...etc.
@@ -81,6 +85,7 @@ EditComponent::EditComponent(
 	Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(EditComponent::OnMouseLButtonPressed));
 	Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(EditComponent::OnMouseRButtonPressed));
 	Connect(wxEVT_ACTIVATE, wxActivateEventHandler(EditComponent::OnActivate));
+   std::cout<<" -------------------- EditComponent 20 "<<std::endl;
 }
 //-----------------------------------------------------------------------
 EditComponent::~EditComponent(void)
@@ -307,47 +312,82 @@ void EditComponent::OnMove(wxMoveEvent& event)
 //-----------------------------------------------------------------------
 void EditComponent::OnClose(wxCloseEvent& event)
 {
+   std::cout<<" -------------------- EditComponent::OnClose 1 "<<mSubType<<std::endl;
 	// Notify its child
 	// ??????????????????
 
 	// Before this component is deleted, notify other components (not components that are connected) that this one is going to be deleted.
-	(static_cast<EditTab*>(GetParent()))->notifyReferers(this, EditTab::SE_CLOSE);
+   std::cout<<" -------------------- EditComponent::OnClose 2 "<<mSubType<<std::endl;
+//    (static_cast<EditTab*>(GetParent()))->notifyReferers(this, EditTab::SE_CLOSE); TODO that was causing SIGSEGV
+   EditTab* parentTab = dynamic_cast<EditTab*>(GetParent());
+   std::cout<<" -------------------- EditComponent::OnClose 3 parentTab = "<<parentTab<<std::endl;
+	if (parentTab)
+   {
+      std::cout<<" -------------------- EditComponent::OnClose 3.1 parentTab = "<<parentTab<<std::endl;
+      parentTab->notifyReferers(this, EditTab::SE_CLOSE);
+      std::cout<<" -------------------- EditComponent::OnClose 3.2 parentTab = "<<parentTab<<std::endl;
+   }
 
+   std::cout<<" -------------------- EditComponent::OnClose 3.3"<<std::endl;
 	// Delete all connections, including that of other components
 	_sortConnections(); // The order of deleting connections matter, so rearrange them.
+   std::cout<<" -------------------- EditComponent::OnClose 3.4"<<std::endl;
 	std::vector<Connection*>::iterator it;
+   std::cout<<" -------------------- EditComponent::OnClose 3.5"<<std::endl;
 	std::vector<Connection*>::iterator itEnd = mConnections.end();
+   std::cout<<" -------------------- EditComponent::OnClose 3.6"<<std::endl;
 	for (it = mConnections.begin(); it != itEnd; ++it)
 	{
+      std::cout<<" -------------------- EditComponent::OnClose 3.7"<<std::endl;
 		Connection* connection = *it;
 		EditComponent* componentConnectedWith = (*it)->getComponentToBeConnectedWith();
+      std::cout<<" -------------------- EditComponent::OnClose 3.9"<<std::endl;
 		componentConnectedWith->deleteConnection(this, (*it)->getRelation(), getOppositeRelationDirection((*it)->getRelationDirection()));
+      std::cout<<" -------------------- EditComponent::OnClose 3.10"<<std::endl;
 		unlockPolicy(connection->getRelation(),
 			connection->getRelationDirection(),
 			connection->getComponentToBeConnectedWith()->getComponentType(),
 			connection->getComponentToBeConnectedWith()->getComponentSubType());
+      std::cout<<" -------------------- EditComponent::OnClose 3.11"<<std::endl;
 		delete *it;
+      std::cout<<" -------------------- EditComponent::OnClose 3.12"<<std::endl;
 	}
 	mConnections.clear();
+   std::cout<<" -------------------- EditComponent::OnClose 4"<<std::endl;
 
 	// Notify the parent that the component is removed.
-	(static_cast<EditTab*>(GetParent()))->notifyComponentRemoved(this);
+// 	(static_cast<EditTab*>(GetParent()))->notifyComponentRemoved(this); // TODO that was causing SIGSEGV
+   if (parentTab)
+   {
+      parentTab->notifyComponentRemoved(this);
+   }
 
 	// Remove corresponding propertyWindow.
 	if (mPropertyWindow)
 	{
-		(static_cast<EditTab*>(GetParent()))->removePropertyWindow(mPropertyWindow);
+// 		(static_cast<EditTab*>(GetParent()))->removePropertyWindow(mPropertyWindow);  // TODO that was causing SIGSEGV
+      if (parentTab)
+      {
+         parentTab->removePropertyWindow(mPropertyWindow); 
+      }
 		mPropertyWindow->Destroy();
 		mPropertyWindow = 0;
 	}
+   std::cout<<" -------------------- EditComponent::OnClose 5"<<std::endl;
 	if (mOldPropertyWindow)
 	{
-		(static_cast<EditTab*>(GetParent()))->removePropertyWindow(mOldPropertyWindow);
+// 		(static_cast<EditTab*>(GetParent()))->removePropertyWindow(mOldPropertyWindow);  // TODO that was causing SIGSEGV
+      if (parentTab)
+      {
+         parentTab->removePropertyWindow(mOldPropertyWindow);
+      }
 		mOldPropertyWindow->Destroy();
 		mOldPropertyWindow = 0;
 	}
 
+   std::cout<<" -------------------- EditComponent::OnClose 98 "<<mSubType<<std::endl;
 	Destroy();
+   std::cout<<" -------------------- EditComponent::OnClose 99 "<<mSubType<<std::endl;
 }
 //------------------------------------------------------------------------------
 void EditComponent::_sortConnections(void)
@@ -405,7 +445,14 @@ void EditComponent::deleteConnection(EditComponent* componentConnectedWith,
 			relation == (*it)->getRelation() &&
 			relationDirection == (*it)->getRelationDirection())
 		{
-			(static_cast<EditTab*>(GetParent()))->notifyConnectionRemoved(this, componentConnectedWith, relation, relationDirection);
+//          (static_cast<EditTab*>(GetParent()))->notifyConnectionRemoved(this, componentConnectedWith, relation, relationDirection);
+         EditTab* parentTab = dynamic_cast<EditTab*>(GetParent());
+         std::cout<<" -------------------- EditComponent::OnClose 3 parentTab = "<<parentTab<<std::endl;
+         if (parentTab)
+         {
+            parentTab->notifyConnectionRemoved(this, componentConnectedWith, relation, relationDirection);
+         }
+         
 			unlockPolicy(relation, relationDirection, componentConnectedWith->getComponentType(), componentConnectedWith->getComponentSubType());
 			delete (*it);
 			mConnections.erase(it);
@@ -831,33 +878,44 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 {
 	// Create new propertyWindow and propagate the attributes of the old one.
 	// Don't delete the existing one, because it is deleting itself.
+   std::cout<<" -------------------- createPropertyWindow 1 "<<mSubType<<std::endl;
+   std::cout<<" -------------------- createPropertyWindow 2 "<<subType<<std::endl;
 
 	mSubType = subType;
+   std::cout<<" -------------------- createPropertyWindow 3 "<<mOldPropertyWindow<<std::endl;
+   std::cout<<" -------------------- createPropertyWindow 4 "<<mPropertyWindow<<std::endl;
 	mOldPropertyWindow = mPropertyWindow;
 
+   std::cout<<" -------------------- createPropertyWindow 5 "<<std::endl;
 	if (mType == CT_SYSTEM)
 	{
+   std::cout<<" -------------------- createPropertyWindow 6 "<<std::endl;
 		SystemPropertyWindow* pWin = new SystemPropertyWindow(mRootParent, this, mName);
 		pWin->setRootFrame(mRootFrame); // To keep a pointer to the main (root) frame
 		mPropertyWindow = pWin;
 	}
 	else if (mType == CT_TECHNIQUE)
 	{
+   std::cout<<" -------------------- createPropertyWindow 7 "<<std::endl;
 		mPropertyWindow = new TechniquePropertyWindow(mRootParent, this, mName);
 	}
 	else if (mType == CT_RENDERER)
 	{
+   std::cout<<" -------------------- createPropertyWindow 8 "<<std::endl;
 		if (propertyWindow)
 		{
+   std::cout<<" -------------------- createPropertyWindow 9 "<<std::endl;
 			mPropertyWindow = mRendererPropertyWindowFactory.createRendererPropertyWindow(mSubType, static_cast<RendererPropertyWindow*>(mPropertyWindow));
 		}
 		else
 		{
+   std::cout<<" -------------------- createPropertyWindow 10 "<<std::endl;
 			mPropertyWindow = mRendererPropertyWindowFactory.createRendererPropertyWindow(mRootParent, this, mName, mSubType);
 		}
 	}
 	else if (mType == CT_EMITTER)
 	{
+   std::cout<<" -------------------- createPropertyWindow 11 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mEmitterPropertyWindowFactory.createEmitterPropertyWindow(mSubType, static_cast<EmitterPropertyWindow*>(mPropertyWindow));
@@ -869,6 +927,7 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 	}
 	else if (mType == CT_AFFECTOR)
 	{
+   std::cout<<" -------------------- createPropertyWindow 14 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mAffectorPropertyWindowFactory.createAffectorPropertyWindow(mSubType, static_cast<AffectorPropertyWindow*>(mPropertyWindow));
@@ -880,6 +939,7 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 	}
 	else if (mType == CT_OBSERVER)
 	{
+   std::cout<<" -------------------- createPropertyWindow 17 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mObserverPropertyWindowFactory.createObserverPropertyWindow(mSubType, static_cast<ObserverPropertyWindow*>(mPropertyWindow));
@@ -891,6 +951,7 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 	}
 	else if (mType == CT_HANDLER)
 	{
+   std::cout<<" -------------------- createPropertyWindow 20 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mEventHandlerPropertyWindowFactory.createEventHandlerPropertyWindow(mSubType, static_cast<EventHandlerPropertyWindow*>(mPropertyWindow));
@@ -902,6 +963,7 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 	}
 	else if (mType == CT_BEHAVIOUR)
 	{
+   std::cout<<" -------------------- createPropertyWindow 23 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mBehaviourPropertyWindowFactory.createBehaviourPropertyWindow(mSubType, static_cast<BehaviourPropertyWindow*>(mPropertyWindow));
@@ -913,6 +975,7 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 	}
 	else if (mType == CT_EXTERN)
 	{
+   std::cout<<" -------------------- createPropertyWindow 26 "<<std::endl;
 		if (propertyWindow)
 		{
 			mPropertyWindow = mExternPropertyWindowFactory.createExternPropertyWindow(mSubType, static_cast<ExternPropertyWindow*>(mPropertyWindow));
@@ -923,8 +986,20 @@ PropertyWindow* EditComponent::createPropertyWindow(ComponentSubType subType, co
 		}
 	}
 
+   std::cout<<" -------------------- createPropertyWindow 30  mPropertyWindow = "<<mPropertyWindow<<std::endl;
 	mPropertyWindow->Hide();
-	(static_cast<EditTab*>(GetParent()))->setPropertyWindow(mPropertyWindow);
+   std::cout<<" -------------------- createPropertyWindow 31 "<<std::endl; // TODO
+#warning TOM - tutaj sprawdź co jest castowane!!!!
+	EditTab* edTab = dynamic_cast<EditTab*>(GetParent());
+   std::cout<<" -------------------- createPropertyWindow 32 edtab = "<<edTab<<std::endl; // TODO
+   if (edTab)
+   {
+   std::cout<<" -------------------- createPropertyWindow 33 "<<std::endl; // TODO
+      edTab->setPropertyWindow(mPropertyWindow);
+   std::cout<<" -------------------- createPropertyWindow 34 "<<std::endl; // TODO
+   }
+
+   std::cout<<" -------------------- createPropertyWindow 33 "<<std::endl;
 	return mPropertyWindow;
 }
 //------------------------------------------------------------------------------
