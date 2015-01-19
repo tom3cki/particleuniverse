@@ -96,7 +96,7 @@ void AtlasImageTool::process (void)
 			{
 				Ogre::Real alpha = Ogre::StringConverter::parseReal(*itAlpha);
 				correctAlpha(image, alpha);
-				itAlpha++;
+				++itAlpha;
 			}
 
 			mAtlasImage.addImage(&image);
@@ -119,13 +119,13 @@ void AtlasImageTool::process (void)
 			itAlpha = mAlpha.begin();
 			Ogre::Real alpha = Ogre::StringConverter::parseReal(*itAlpha);
 			correctAlpha(nextImage, alpha);
-			itAlpha++;
+			++itAlpha;
 		}
 
 		mAtlasImage.addImage(&nextImage);
-		frameCounter++;
-		itInputFileName++;
-		itFrame++;
+		++frameCounter;
+		++itInputFileName;
+		++itFrame;
 
 		while (itInputFileName != mInputFileNames.end())
 		{
@@ -138,15 +138,15 @@ void AtlasImageTool::process (void)
 			{
 				Ogre::Real alpha = Ogre::StringConverter::parseReal(*itAlpha);
 				correctAlpha(nextImage, alpha);
-				itAlpha++;
+				++itAlpha;
 			}
 
 			if (itFrame != mInputFrames.end())
 			{
 				size_t firstFrame = nextFrame;
 				nextFrame = Ogre::StringConverter::parseUnsignedInt(*itFrame);
-				itFrame++;
-				frameCounter++;
+				++itFrame;
+				++frameCounter;
 
 				// Generate and add interpolated images to the atlas image
 				size_t numberOfFrames = nextFrame - firstFrame;
@@ -164,8 +164,8 @@ void AtlasImageTool::process (void)
 				}
 			}
 			mAtlasImage.addImage(&nextImage);
-			frameCounter++;
-			itInputFileName++;
+			++frameCounter;
+			++itInputFileName;
 		}
 	}
 

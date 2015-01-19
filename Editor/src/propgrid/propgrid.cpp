@@ -1865,9 +1865,11 @@ class wxPGClipperWindow : public wxWindow
 public:
 
     wxPGClipperWindow()
-        : wxWindow()
+        : wxWindow(),
+          m_xadj(0),
+          m_yadj(0)
     {
-        wxPGClipperWindow::Init();
+        Init();
     }
 
     wxPGClipperWindow(wxWindow* parent,
@@ -5109,7 +5111,7 @@ wxString& wxPropertyGrid::ExpandEscapeSequences( wxString& dst_str, wxString& sr
 
     dst_str.clear();
 
-    for ( ; i != src_str.end(); i++ )
+    for ( ; i != src_str.end(); ++i )
     {
         wxUniChar a = wxPGGetIterChar(src_str, i);
 
@@ -5169,7 +5171,7 @@ wxString& wxPropertyGrid::CreateEscapeSequences( wxString& dst_str, wxString& sr
 
     dst_str.clear();
 
-    for ( ; i != src_str.end(); i++ )
+    for ( ; i != src_str.end(); ++i )
     {
         wxChar a = wxPGGetIterChar(src_str, i);
 
@@ -10801,7 +10803,7 @@ bool wxPGStringTokenizer::HasMoreTokens()
                 else
                 {
                     //wxLogDebug(m_readyToken);
-                    i++;
+                    ++i;
                     m_curPos = i;
                     return true;
                 }
@@ -10813,7 +10815,7 @@ bool wxPGStringTokenizer::HasMoreTokens()
                 prev_a = wxT('\0');
             }
         }
-        i++;
+        ++i;
     }
 
     m_curPos = str.end();
@@ -12408,7 +12410,7 @@ void wxPropertyGridState::SetPropertyValues( const wxVariantList& list, wxPGId d
     wxVariantList::const_iterator node;
 
     //for ( wxVariantList::Node *node = list.GetFirst(); node; node = node->GetNext() )
-    for ( node = list.begin(); node != list.end(); node++ )
+    for ( node = list.begin(); node != list.end(); ++node )
     {
         wxVariant *current = (wxVariant*)*node;
 

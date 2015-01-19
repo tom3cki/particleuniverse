@@ -253,7 +253,7 @@ void ControlPointColourControl::fillGradient(wxPaintDC& dc)
 	float g, g1, g2;
 	float b, b1, b2;
 	float a, a1, a2;
-	it++;
+	++it;
 
 	// Because wxWidgets does not allow alpha in draw functions, we have to fake it.
 	while (it != itEnd)

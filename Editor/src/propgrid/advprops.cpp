@@ -1346,7 +1346,7 @@ const wxString& wxPGGetDefaultImageWildcard( int* allImageFilesIndex = 0 )
 
         // Let's iterate over the image handler list.
         //for ( wxList::Node *node = handlers.GetFirst(); node; node = node->GetNext() )
-        for ( node = handlers.begin(); node != handlers.end(); node++ )
+        for ( node = handlers.begin(); node != handlers.end(); ++node )
         {
             wxImageHandler *handler = (wxImageHandler*)*node;
 

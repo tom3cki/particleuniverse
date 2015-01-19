@@ -412,7 +412,7 @@ void wxPropertyGrid::DoubleToString(wxString& target,
         wxString::const_iterator i = target.end() - 1;
         size_t new_len = target.length() - 1;
 
-        for ( ; i != target.begin(); i-- )
+        for ( ; i != target.begin(); --i )
         {
             if ( wxPGGetIterChar(target, i) != wxT('0') )
                 break;

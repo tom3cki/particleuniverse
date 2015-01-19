@@ -49,7 +49,7 @@ void BaseApplication::run()
 		Ogre::ConfigFile::SettingsMultiMap::iterator i;
 
 		// go through all resource paths
-		for (i = settings->begin(); i != settings->end(); i++)
+		for (i = settings->begin(); i != settings->end(); ++i)
 		{
 			type = i->first;
 			arch = i->second;

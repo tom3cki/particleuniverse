@@ -226,15 +226,23 @@ bool EditComponent::isRelationUnique(ComponentRelation relation, ComponentRelati
 //-----------------------------------------------------------------------
 bool EditComponent::isConnectionPossible(void)
 {
+   std::cout<<" -------------------- EditComponent::isConnectionPossible 1 "<<std::endl;
+   
 	std::vector<ConnectionPolicy*>::iterator it;
+   std::cout<<" -------------------- EditComponent::isConnectionPossible 2 "<<std::endl;
 	std::vector<ConnectionPolicy*>::iterator itEnd = mPolicies.end();
+   std::cout<<" &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& EditComponent::isConnectionPossible 3 "<<mPolicies.size()<<std::endl;
 	for (it = mPolicies.begin(); it != itEnd; ++it)
 	{
+      std::cout<<" -------------------- EditComponent::isConnectionPossible iter 1"<<std::endl;
+      ConnectionPolicy* cp = *it;
+      std::cout<<" -------------------- EditComponent::isConnectionPossible iter 2"<<std::endl;
 		if (!(*it)->isPolicyLocked())
 		{
 			return true;
 		}
 	}
+   std::cout<<" -------------------- EditComponent::isConnectionPossible 99 "<<std::endl;
 	return false;
 }
 //-----------------------------------------------------------------------

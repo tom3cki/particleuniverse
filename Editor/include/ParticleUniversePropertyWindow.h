@@ -285,7 +285,7 @@ class ParentPropertyWithButtonAndPositions : public wxParentPropertyClass
 
 		/**	Add the position
 		*/
-		wxPGId* addPosition(wxPropertyGrid* propgrid, Ogre::Vector3 vec3 = Ogre::Vector3::ZERO);
+		void addPosition(wxPropertyGrid* propgrid, Ogre::Vector3 vec3 = Ogre::Vector3::ZERO);
 
 		/**	Returns the number of positions
 		*/
@@ -319,7 +319,7 @@ class ParentPropertyWithButtonAndFloats : public wxParentPropertyClass
 
 		/**	Add a float
 		*/
-		wxPGId* addFloat(wxPropertyGrid* propgrid, float value = 0.0f);
+		void addFloat(wxPropertyGrid* propgrid, float value = 0.0f);
 
 		/**	Get number of floats
 		*/

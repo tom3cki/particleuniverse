@@ -560,10 +560,9 @@ void ParticleUniverseEditorFrame::OnMouseMoveCallback(wxMouseEvent& event)
 			Ogre::Radian yaw = Ogre::Radian(Ogre::Degree(yawDiff));
 			Ogre::Radian pitch = Ogre::Radian(Ogre::Degree(pitchDiff));
 
-			Ogre::Vector3 cameraPosition = _getCameraPosition();
 			Ogre::Quaternion rotationY(yaw, Ogre::Vector3::UNIT_Y); // Rotation around the y-axis
 			Ogre::Quaternion rotationX(pitch, cameraPivotVector.crossProduct(Ogre::Vector3::UNIT_Y)); // Rotation around axis perpendicular with the pivot-camera axis
-			cameraPosition = pivot + rotationX * rotationY * cameraPivotVector; //  Calculate the new position
+			Ogre::Vector3 cameraPosition = pivot + rotationX * rotationY * cameraPivotVector; //  Calculate the new position
 			_setCameraPosition(cameraPosition);
 			_cameraLookAt(pivot);
 		}

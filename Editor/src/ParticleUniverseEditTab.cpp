@@ -541,7 +541,7 @@ bool EditTab::_processEmitRemoved(EditComponent* node1, EditComponent* node2)
 	{
 		// Check what type of particle is emitted.
 		ParticleUniverse::ParticleEmitter* emitter = static_cast<ParticleUniverse::ParticleEmitter*>(element1);
-		ParticleUniverse::ParticleTechnique* technique;
+		ParticleUniverse::ParticleTechnique* technique=0;
 		if (element2)
 		{
 			// Use the technique from the emitted component; this is preferred, because the technique from the emitter might be 0
@@ -1435,12 +1435,19 @@ void EditTab::destroyDanglingPUComponents(void)
    std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 2"<<std::endl;
 	for (it = newList.begin(); it != newList.end(); ++it)
 	{
-      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3 iter ptr = "<<(*it)<<std::endl;
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3.1 iter ptr = "<<(*it)<<std::endl;
 		EditComponent* component = *it;
-      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3  component = "<<component<<std::endl;
-      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3  component isConnectionPossible? = "<<component->isConnectionPossible()<<std::endl;
+      if (!component)
+      {
+         continue;
+      }
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3.2  component = "<<component<<std::endl;
+      std::cout<<"3 . 1 "<<std::endl;
+      component->isConnectionPossible();
+      std::cout<<"3 . 2 "<<std::endl;
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3.3  component isConnectionPossible? = "<<component->isConnectionPossible()<<std::endl;
 
-      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3 type = "<<component->getComponentType().ToAscii()<<std::endl;
+      std::cout<<" -------------------- EditTab::destroyDanglingPUComponents 3.4 type = "<<component->getComponentType().ToAscii()<<std::endl;
 		//---------------------------------------- TECHNIQUE ----------------------------------------
 		if (component->getComponentType() == CT_TECHNIQUE)
 		{

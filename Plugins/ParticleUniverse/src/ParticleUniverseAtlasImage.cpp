@@ -155,7 +155,7 @@ namespace ParticleUniverse
 					memcpy(data + atlasPointer, image->getData() + pixelLine * mIndividualImageRowSpan, mIndividualImageRowSpan);	
 					atlasPointer += mAtlas->getRowSpan();
 				}
-				it++;
+				++it;
 				if (it != mImageList.end())
 				{
 					image = *it;

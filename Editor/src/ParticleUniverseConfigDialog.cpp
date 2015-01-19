@@ -811,7 +811,7 @@ const Ogre::StringVector ConfigDialog::getExcludeDirList(void)
 			mExcludeDirlist.push_back(dir);
 			_removeFromDirList(dir);
 		}
-		itTexts++;
+		++itTexts;
 	}
 
 

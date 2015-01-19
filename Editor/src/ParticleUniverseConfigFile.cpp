@@ -32,11 +32,11 @@ void ConfigFile::setConcatSetting(const Ogre::String& key, const Ogre::StringVec
 	if (!value.empty())
 	{
 		concat = *it;
-		it++;
+		++it;
 		while (it != itEnd)
 		{
 			concat = concat + "; " + *it;
-			it++;
+			++it;
 		}
 		mSaveBuffer[key]=concat;
 	}

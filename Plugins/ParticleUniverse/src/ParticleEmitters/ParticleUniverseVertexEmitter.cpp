@@ -342,9 +342,9 @@ namespace ParticleUniverse
 		{
 			mSpawnPositionList.insert (iterator, start);
 			start += increment;
-			iterator--;
+			--iterator;
 			if (iterator != mSpawnPositionList.begin())
-				iterator--;
+				--iterator;
 		}
 	}
 	//-----------------------------------------------------------------------

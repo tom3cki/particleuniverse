@@ -55,7 +55,7 @@ bool MeshProperty::OnEvent (wxPropertyGrid* propgrid, wxWindow* wnd_primary, wxE
 				choices[count] = ogre2wx(name);
 				count++;
 			}
-			itListOfResourceGroups++;
+			++itListOfResourceGroups;
 		}
 
 //		Ogre::ResourceManager::ResourceMapIterator meshIterator = Ogre::MeshManager::getSingleton().getResourceIterator();
@@ -108,9 +108,9 @@ const Ogre::String& MeshDialog::openDialog(wxWindow* parent)
 		{
 			Ogre::String name = *it;
 			choices[count] = ogre2wx(name);
-			count++;
+			++count;
 		}
-		itListOfResourceGroups++;
+		++itListOfResourceGroups;
 	}
 
 	if (count > 0)

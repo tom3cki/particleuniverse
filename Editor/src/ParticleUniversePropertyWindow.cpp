@@ -64,7 +64,7 @@ bool ParentPropertyWithButtonAndPositions::OnEvent (wxPropertyGrid* propgrid, wx
 	return true;
 }
 //-----------------------------------------------------------------------
-wxPGId* ParentPropertyWithButtonAndPositions::addPosition(wxPropertyGrid* propgrid, Ogre::Vector3 vec3)
+void ParentPropertyWithButtonAndPositions::addPosition(wxPropertyGrid* propgrid, Ogre::Vector3 vec3)
 {
 	// Insert a position
 	wxString postFix = ogre2wx(Ogre::StringConverter::toString(mPosition));
@@ -78,7 +78,6 @@ wxPGId* ParentPropertyWithButtonAndPositions::addPosition(wxPropertyGrid* propgr
 	propgrid->SetPropertyEditor(zid, wxPG_EDITOR(SpinCtrl));
 	mPosition++;
 	propgrid->GetPrevProperty(xid);
-	return &xid;
 }
 //-----------------------------------------------------------------------
 unsigned int ParentPropertyWithButtonAndPositions::getNumberOfPositions(void)
@@ -141,7 +140,7 @@ bool ParentPropertyWithButtonAndFloats::OnEvent (wxPropertyGrid* propgrid, wxWin
 	return true;
 }
 //-----------------------------------------------------------------------
-wxPGId* ParentPropertyWithButtonAndFloats::addFloat(wxPropertyGrid* propgrid, float value)
+void ParentPropertyWithButtonAndFloats::addFloat(wxPropertyGrid* propgrid, float value)
 {
 	// Insert a float
 	wxString postFix = ogre2wx(Ogre::StringConverter::toString(mFloat));
@@ -150,7 +149,6 @@ wxPGId* ParentPropertyWithButtonAndFloats::addFloat(wxPropertyGrid* propgrid, fl
 	propgrid->SetPropertyEditor(xid, wxPG_EDITOR(SpinCtrl));
 	mFloat++;
 	propgrid->GetPrevProperty(xid);
-	return &xid;
 }
 //-----------------------------------------------------------------------
 unsigned int ParentPropertyWithButtonAndFloats::getNumberOfFloats(void)

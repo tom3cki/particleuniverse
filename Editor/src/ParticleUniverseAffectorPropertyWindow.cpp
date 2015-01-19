@@ -341,7 +341,7 @@ bool AffectorPropertyWindow::validateTextureCoord(wxPGProperty* prop, ParticleUn
 		if (renderer)
 		{
 			size_t max = renderer->getNumTextureCoords();
-			size_t val = prop->DoGetValue().GetLong();
+			long val = prop->DoGetValue().GetLong();
 			if (val < 0 || val > max - 1)
 			{
 				Ogre::String ogreMax = Ogre::StringConverter::toString(max);
